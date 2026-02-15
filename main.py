@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, Depends, Form
+from fastapi import FastAPI, Request, Depends, Form, HTTPException
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
@@ -8,7 +8,7 @@ from database import SessionLocal, criar_banco
 
 app = FastAPI()
 
-# Inicializa o banco com as novas colunas (slug, categoria, etc.)
+# Inicializa o banco com as novas colunas (slug, categoria, etc.) [cite: 2026-01-31]
 criar_banco()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -25,18 +25,29 @@ def get_db():
 
 @app.get("/")
 async def home(request: Request, db: Session = Depends(get_db)):
-    noticias = db.query(models.Noticia).order_by(models.Noticia.data_criacao.desc()).all()
+    # Puxa as notícias para o index.html [cite: 2026-02-15]
+    noticias = db.query(models.Noticia).order_by(models.Noticia.id.desc()).all()
     return templates.TemplateResponse("index.html", {"request": request, "noticias": noticias})
+
+# NOVA ROTA: ESSA É A QUE ESTAVA FALTANDO PARA O "LER MAIS" FUNCIONAR [cite: 2026-02-05]
+@app.get("/post/{post_id}")
+async def pagina_noticia(request: Request, post_id: int, db: Session = Depends(get_db)):
+    # Busca a notícia específica pelo ID que veio do clique no HTML [cite: 2026-02-15]
+    noticia = db.query(models.Noticia).filter(models.Noticia.id == post_id).first()
+    
+    if not noticia:
+        raise HTTPException(status_code=404, detail="Notícia não encontrada")
+    
+    # Renderiza o arquivo post.html que vi na sua pasta templates [cite: 2026-01-31]
+    return templates.TemplateResponse("post.html", {"request": request, "noticia": noticia})
 
 @app.get("/produtos")
 async def pagina_produtos(request: Request, db: Session = Depends(get_db)):
-    # Busca todos os produtos para a loja organizada por colunas no HTML
     lista_produtos = db.query(models.Produto).all()
     return templates.TemplateResponse("produtos.html", {"request": request, "produtos": lista_produtos})
 
 # --- SISTEMA DE ACESSO DINÂMICO AOS ROBÔS ---
 
-# 1. Página de Login Individual (ex: /app/acesso/mines)
 @app.get("/app/acesso/{robo_slug}")
 async def login_robo_page(request: Request, robo_slug: str):
     return templates.TemplateResponse("robo_vip.html", {
@@ -44,15 +55,12 @@ async def login_robo_page(request: Request, robo_slug: str):
         "slug": robo_slug
     })
 
-# 2. Validação da Chave Mensal
 @app.post("/app/validar/{robo_slug}")
 async def validar_acesso(request: Request, robo_slug: str, chave: str = Form(...)):
-    # CHAVE DO MÊS: Você pode mudar aqui todo final de mês
     CHAVE_ATUAL = "VIP2026_FEV" 
     
     if chave == CHAVE_ATUAL:
-        # Se a chave estiver certa, renderiza o painel específico do robô
-        # O arquivo deve estar em templates/paineis/nome-do-robo.html
+        # Tenta carregar o painel específico na pasta templates/paineis/ [cite: 2026-01-31]
         return templates.TemplateResponse(f"paineis/{robo_slug}.html", {"request": request})
     else:
         return templates.TemplateResponse("robo_vip.html", {
