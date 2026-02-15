@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Acesso Restrito - Robô Web</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #0d1117;">
+
+    <div style="background: #161b22; padding: 40px; border-radius: 10px; border: 1px solid var(--neon-blue); text-align: center; max-width: 400px;">
+        <h2 style="color: var(--neon-blue);">🔒 Acesso VIP</h2>
+        <p>Este robô é exclusivo para assinantes.</p>
+        
+        <form action="/app/acessar-robo" method="post" style="margin-top: 20px;">
+            <input type="password" name="chave_acesso" placeholder="Digite sua Chave de Acesso" required 
+                   style="padding: 10px; width: 100%; margin-bottom: 15px; border-radius: 5px; border: 1px solid #30363d; background: #0d1117; color: white;">
+            
+            <button type="submit" class="btn-destaque" style="width: 100%; border: none; cursor: pointer;">ENTRAR NO SISTEMA</button>
+        </form>
+
+        {% if erro %}
+        <p style="color: #ff0055; margin-top: 15px;">{{ erro }}</p>
+        {% endif %}
+        
+        <p style="margin-top: 20px; font-size: 0.8rem; color: #8b949e;">
+            Ainda não tem acesso? <a href="/produtos" style="color: var(--neon-purple);">Assine aqui.</a>
+        </p>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ noticia.titulo }} - Portal IA</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="simple-nav">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="/" class="back-link">← Voltar para a Home</a>
+            
+            <div class="main-nav" style="margin-bottom: 0;">
+                <a href="/produtos" class="btn-destaque">🛒 VER PRODUTOS & ROBÔS</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="ad-zone top-ad-article" style="text-align: center; padding: 20px; margin-bottom: 20px;"> 
+            [PUBLICIDADE - ADSENSE] 
+        </div>
+
+        <article class="full-post">
+            <header class="post-header">
+                <span class="category-tag">{{ noticia.categoria }}</span>
+                <h1>{{ noticia.titulo }}</h1>
+                <div class="post-meta">Publicado em 2026 • Por Especialista em IA</div>
+            </header>
+
+            <div class="post-content">
+                {{ noticia.conteudo }}
+            </div>
+
+            <section class="ebook-funnel neon-border">
+                <div class="funnel-content">
+                    <h2>Domine a Tecnologia em 2026</h2>
+                    <p>Quer ter acesso aos nossos <strong>Robôs de Trade, Sinais de Cassino</strong> e E-books exclusivos?</p>
+                    <a href="/produtos" class="btn-cta">ACESSAR MARKETPLACE COMPLETO</a>
+                </div>
+            </section>
+        </article>
+
+        <div class="ad-zone bottom-ad-article" style="text-align: center; padding: 20px; margin-top: 40px;"> 
+            [PUBLICIDADE - FIM DO ARTIGO] 
+        </div>
+    </main>
+
+    <footer class="main-footer" style="text-align: center; padding: 40px 0; border-top: 1px solid #30363d; margin-top: 60px;">
+        <p>&copy; 2026 Portal IA - Notícias e Tecnologia</p>
+    </footer>
+</body>
+</html>

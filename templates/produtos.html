@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace IA | Painel de Ferramentas</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="simple-nav">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="/" class="back-link">← Voltar ao Portal</a>
+            <span style="color: var(--neon-purple); font-weight: bold; font-size: 0.8rem;">LOJA OFICIAL</span>
+        </div>
+    </nav>
+
+    <header class="main-header" style="padding: 20px 20px;">
+        <h1 style="font-size: 2rem;">MARKETPLACE<span>.IA</span></h1>
+    </header>
+
+    <main class="container">
+        
+        <section class="category-section">
+            <h3 class="category-title" style="color: var(--neon-blue);">🤖 AUXILIADORES</h3>
+            <div class="product-shelf">
+                {% for p in produtos if p.tipo == 'web_bot' %}
+                <div class="product-item-box">
+                    <div class="info">
+                        <strong>{{ p.nome }}</strong>
+                        <span class="price-tag">{{ p.preco }}</span>
+                    </div>
+                    <a href="/app/acesso/{{ p.slug }}" class="btn-action">ACESSAR</a>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="category-section">
+            <h3 class="category-title" style="color: #ff9100;">📊 TRADES</h3>
+            <div class="product-shelf">
+                {% for p in produtos if p.tipo == 'trade_bot' %}
+                <div class="product-item-box">
+                    <div class="info">
+                        <strong>{{ p.nome }}</strong>
+                        <span class="price-tag">{{ p.preco }}</span>
+                    </div>
+                    <a href="{{ p.link_venda }}" class="btn-action" style="background: #ff9100;">COMPRAR</a>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="category-section">
+            <h3 class="category-title" style="color: white;">📚 E-BOOKS</h3>
+            <div class="product-shelf">
+                {% for p in produtos if p.tipo == 'ebook' %}
+                <div class="product-item-box">
+                    <div class="info">
+                        <strong>{{ p.nome }}</strong>
+                        <span class="price-tag">{{ p.preco }}</span>
+                    </div>
+                    <a href="{{ p.arquivo_url }}" download class="btn-action" style="background: white; color: black;">BAIXAR</a>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="category-section">
+            <h3 class="category-title" style="color: #00ff41;">🛒 INFOPRODUTOS PARCEIROS</h3>
+            <div class="product-shelf">
+                {% for p in produtos if p.tipo == 'infoproduto' %}
+                <div class="product-item-box">
+                    <div class="info">
+                        <strong>{{ p.nome }}</strong>
+                        <span style="font-size: 0.6rem; color: #8b949e;">Loja: {{ p.descricao }}</span>
+                    </div>
+                    <a href="{{ p.link_venda }}" target="_blank" class="btn-action" style="background: #00ff41; color: black;">VER OFERTA</a>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="category-section">
+            <h3 class="category-title" style="color: #8b949e;">🔗 OUTROS</h3>
+            <div class="product-shelf">
+                <div class="product-item-box" style="opacity: 0.7; border-left: 2px solid #555;">
+                    <div class="info">
+                        <strong>Robô de Informação</strong>
+                        <span style="font-size: 0.65rem; color: #ff9100;">EM DESENVOLVIMENTO...</span>
+                    </div>
+                    <button class="btn-action" style="background: #333; cursor: not-allowed;" disabled>AGUARDE</button>
+                </div>
+            </div>
+        </section>
+
+        <div class="obs-box-final">
+            <strong>OBS:</strong> Todos os robôs ou e-books têm informações baseadas em algoritmos e prezam pela manutenção semanal ou mensal para performance ideal.
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Marketplace IA</p>
+    </footer>
+</body>
+</html>

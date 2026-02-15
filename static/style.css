@@ -1,0 +1,151 @@
+/* --- CONFIGURAÇÕES GERAIS --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Roboto+Mono&display=swap');
+
+:root {
+    --bg: #0d1117;
+    --card: #161b22;
+    --neon-blue: #00f2ff;
+    --neon-purple: #7000ff;
+    --text: #e6edf3;
+    --border: #30363d;
+    --success: #00ff41;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* --- HEADER --- */
+.main-header {
+    text-align: center;
+    padding: 30px 0;
+}
+
+.main-header h1 {
+    font-size: 2.2rem;
+    letter-spacing: -1px;
+}
+
+.main-header h1 span { color: var(--neon-blue); }
+
+.simple-nav {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    background: #0d1117;
+}
+
+/* --- ESTRUTURA DE PRATELEIRAS (NOVO) --- */
+
+/* Cada categoria ocupa uma linha inteira embaixo da outra */
+.category-section {
+    margin-bottom: 25px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.category-title {
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Os produtos dentro da categoria ficam lado a lado */
+.product-shelf {
+    display: flex;
+    flex-wrap: wrap; /* Permite que os produtos pulem para a linha de baixo se não couberem mais na lateral */
+    gap: 15px;
+}
+
+/* O bloco do produto ficou maior como solicitado */
+.product-item-box {
+    background: #0d1117;
+    min-width: 260px; /* Largura maior para os produtos */
+    flex: 0 1 auto;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--neon-blue);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: 0.3s;
+}
+
+.product-item-box:hover {
+    transform: translateY(-3px);
+    border-color: var(--neon-blue);
+}
+
+.info strong {
+    display: block;
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+}
+
+.price-tag {
+    color: var(--success);
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+/* Botões de ação robustos */
+.btn-action {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 4px;
+    background: var(--neon-purple);
+    color: white;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.btn-action:hover {
+    filter: brightness(1.2);
+}
+
+/* --- OBSERVAÇÃO TÉCNICA FINAL --- */
+.obs-box-final {
+    margin-top: 40px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed #444;
+    border-radius: 8px;
+    color: #8b949e;
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+/* --- ESTILOS DE NOTÍCIAS (HOME) --- */
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* --- RESPONSIVIDADE CELULAR --- */
+@media (max-width: 600px) {
+    .product-item-box {
+        min-width: 100%; /* No celular o produto ocupa a largura toda */
+    }
+}

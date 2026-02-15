@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal IA & Robótica | O Futuro em 2026</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="simple-nav">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="/" class="logo-text">PORTAL<span>.IA</span></a>
+            <div class="main-nav">
+                <a href="/produtos" class="btn-destaque">🛒 ROBÔS & PRODUTOS</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1>A Era dos Robôs Humanoides Começou</h1>
+                <p>Veja como a economia global está sendo moldada pela integração total de IAs em 2026.</p>
+                <a href="/post/1" class="btn-main">LER DESTAQUE</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h2 class="section-title">Últimas Atualizações</h2>
+        
+        <section class="news-grid">
+            {% for noticia in noticias %}
+            <div class="news-card">
+    <div class="card-image" style="background-image: url('{{ noticia.imagem_url }}');"></div>
+    
+    <div class="card-body">
+        <div class="category-tag">{{ noticia.categoria }}</div>
+        <h2>{{ noticia.titulo }}</h2>
+        <p>{{ noticia.conteudo[:100] }}...</p>
+        <a href="/post/{{ noticia.id }}" class="read-more">Ver Mais →</a>
+    </div>
+</div>
+            {% endfor %}
+        </section>
+    </main>
+
+    <section class="newsletter-section">
+        <div class="container">
+            <h2>Fique à frente da Revolução</h2>
+            <p>Receba alertas de <strong>Robôs Lucrativos</strong> e notícias no seu e-mail.</p>
+            <form action="#" class="newsletter-form">
+                <input type="email" placeholder="Seu melhor e-mail" required>
+                <button type="submit" class="btn-destaque">QUERO RECEBER</button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 Portal IA</p>
+    </footer>
+</body>
+</html>

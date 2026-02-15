@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel VIP | Robô Nexus IA</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .terminal-box {
+            background: #000;
+            border: 2px solid var(--neon-blue);
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Roboto Mono', monospace;
+            color: #00ff41;
+            height: 300px;
+            overflow-y: auto;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+        }
+        .status-dot {
+            height: 10px;
+            width: 10px;
+            background-color: #00ff41;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+            box-shadow: 0 0 10px #00ff41;
+        }
+    </style>
+</head>
+<body>
+    <nav class="simple-nav">
+        <div class="container" style="display: flex; justify-content: space-between;">
+            <a href="/produtos" class="back-link">← Sair do Painel</a>
+            <span style="color: #00ff41;"><span class="status-dot"></span> SISTEMA ATIVO</span>
+        </div>
+    </nav>
+
+    <main class="container">
+        <header style="text-align: center; margin-bottom: 40px;">
+            <h1 style="color: white;">NEXUS<span>.ALPHA</span></h1>
+            <p>Sua inteligência auxiliar está processando dados em tempo real.</p>
+        </header>
+
+        <div class="product-grid" style="grid-template-columns: 1fr 2fr;">
+            <div class="product-card" style="padding: 20px;">
+                <h3 style="color: var(--neon-blue);">Controles</h3>
+                <button onclick="iniciarRobo()" class="btn-destaque" style="width: 100%; margin-bottom: 10px; border: none; cursor: pointer;">LIGAR ROBÔ</button>
+                <button onclick="pararRobo()" class="btn-aff" style="width: 100%; cursor: pointer;">PAUSAR SINAIS</button>
+                
+                <hr style="border: 0.5px solid #30363d; margin: 20px 0;">
+                
+                <p style="font-size: 0.8rem; color: #8b949e;">Configurações:</p>
+                <select style="width: 100%; padding: 10px; background: #0d1117; color: white; border: 1px solid #30363d;">
+                    <option>Assertividade Alta (85%)</option>
+                    <option>Modo Turbo (Frequente)</option>
+                </select>
+            </div>
+
+            <div class="product-card">
+                <h3 style="color: var(--neon-purple);">Sinais do Sistema</h3>
+                <div class="terminal-box" id="terminal">
+                    > Aguardando inicialização...<br>
+                    > Estabelecendo conexão com API global...
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function iniciarRobo() {
+            const term = document.getElementById('terminal');
+            term.innerHTML += "<br>> <span style='color:white'>[INFO]</span> Robô Iniciado com Sucesso!";
+            
+            // Simulação de Sinais
+            setInterval(() => {
+                const moedas = ["BTC/USDT", "ETH/USDT", "SOL/USDT"];
+                const acao = Math.random() > 0.5 ? "COMPRA" : "VENDA";
+                const m = moedas[Math.floor(Math.random() * moedas.length)];
+                
+                term.innerHTML += `<br>> <span style='color:var(--neon-blue)'>[SINAL]</span> ${m} - Sugestão de ${acao}`;
+                term.scrollTop = term.scrollHeight; // Auto-scroll para baixo
+            }, 3000);
+        }
+
+        function pararRobo() {
+            alert("Sistema Pausado!");
+            location.reload();
+        }
+    </script>
+</body>
+</html>
