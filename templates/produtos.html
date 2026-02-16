@@ -3,22 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marketplace IA | Painel de Ferramentas</title>
+    <title>Marketplace IA | Loja Oficial</title>
     <link rel="stylesheet" href="/static/style.css">
     <style>
-        /* Estilo para criar o Carrossel Lateral */
+        /* --- ESTILO DO CARROSSEL (CORRIGIDO PARA MOBILE) --- */
         .product-shelf {
             display: flex;
-            overflow-x: auto; /* Permite scroll lateral */
+            flex-wrap: nowrap; /* OBRIGATÓRIO: Impede que os itens quebrem linha */
+            overflow-x: auto;  /* Habilita o scroll lateral */
+            -webkit-overflow-scrolling: touch; /* Deixa o deslize suave no iPhone */
             gap: 15px;
-            padding: 10px 5px 20px 5px;
-            scroll-snap-type: x mandatory; /* Faz o "imã" no item ao deslizar */
-            scrollbar-width: thin; /* Deixa a barra fina no Firefox */
+            padding: 10px 5px 25px 5px; /* Espaço extra embaixo para a barra de rolagem */
+            scroll-snap-type: x mandatory; /* Efeito magnético */
         }
         
-        /* Esconde a barra de scroll no Chrome/Safari para ficar mais limpo */
+        /* Personalização da barra de rolagem */
         .product-shelf::-webkit-scrollbar {
-            height: 4px;
+            height: 6px; /* Barra um pouco mais visível para indicar que tem mais */
+        }
+        .product-shelf::-webkit-scrollbar-track {
+            background: #0d1117;
         }
         .product-shelf::-webkit-scrollbar-thumb {
             background: var(--neon-blue);
@@ -26,31 +30,38 @@
         }
 
         .product-item-box {
-            min-width: 260px; /* Largura fixa para os itens no carrossel */
+            flex: 0 0 auto; /* OBRIGATÓRIO: Impede o card de encolher */
+            width: 260px;   /* Largura fixa */
             scroll-snap-align: start;
-            flex-shrink: 0; /* Impede que o item esprema */
             background: #161b22;
             border-radius: 12px;
             overflow: hidden;
             border: 1px solid #30363d;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            position: relative;
         }
 
-        /* Correção da Imagem */
+        /* Área da Imagem */
         .product-img-container {
             width: 100%;
-            height: 140px;
+            height: 150px;
             background-color: #0d1117;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+            border-bottom: 1px solid #30363d;
         }
         
         .product-img-container img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Faz a imagem preencher o espaço sem distorcer */
+            object-fit: cover;
         }
+        
+        /* Botões Específicos */
+        .btn-ebook { background: white; color: black; }
+        .btn-trade { background: #ff9100; color: white; }
+        .btn-partner { background: #00ff41; color: black; }
+        .btn-access { background: var(--neon-blue); color: white; }
+
+        .category-title { margin-left: 5px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -63,12 +74,13 @@
 
     <header class="main-header" style="padding: 20px 20px;">
         <h1 style="font-size: 2rem;">MARKETPLACE<span>.IA</span></h1>
+        <p style="color: #8b949e; font-size: 0.9rem;">As melhores ferramentas para 2026</p>
     </header>
 
     <main class="container">
         
         <section class="category-section">
-            <h3 class="category-title" style="color: var(--neon-blue); margin-left: 10px;">🤖 AUXILIADORES</h3>
+            <h3 class="category-title" style="color: var(--neon-blue);">🤖 AUXILIADORES</h3>
             <div class="product-shelf">
                 {% for p in produtos if p.tipo == 'web_bot' %}
                 <div class="product-item-box">
@@ -77,16 +89,18 @@
                     </div>
                     <div class="info" style="padding: 15px;">
                         <strong>{{ p.nome }}</strong>
-                        <span class="price-tag">{{ p.preco }}</span>
-                        <a href="/app/acesso/{{ p.slug }}" class="btn-action" style="margin-top: 10px; display: block; text-align: center;">ACESSAR</a>
+                        <span class="price-tag" style="color: var(--neon-blue);">{{ p.preco }}</span>
+                        <a href="/app/acesso/{{ p.slug }}" class="btn-action btn-access" style="margin-top: 10px; display: block; text-align: center;">ACESSAR PAINEL</a>
                     </div>
                 </div>
+                {% else %}
+                <p style="color: #555; padding: 20px;">Nenhum robô disponível no momento.</p>
                 {% endfor %}
             </div>
         </section>
 
         <section class="category-section">
-            <h3 class="category-title" style="color: #ff9100; margin-left: 10px;">📊 TRADES</h3>
+            <h3 class="category-title" style="color: #ff9100;">📊 TRADES & SINAIS</h3>
             <div class="product-shelf">
                 {% for p in produtos if p.tipo == 'trade_bot' %}
                 <div class="product-item-box">
@@ -95,8 +109,8 @@
                     </div>
                     <div class="info" style="padding: 15px;">
                         <strong>{{ p.nome }}</strong>
-                        <span class="price-tag">{{ p.preco }}</span>
-                        <a href="{{ p.link_venda }}" class="btn-action" style="background: #ff9100; margin-top: 10px; display: block; text-align: center;">COMPRAR</a>
+                        <span class="price-tag" style="color: #ff9100;">{{ p.preco }}</span>
+                        <a href="{{ p.link_venda }}" class="btn-action btn-trade" style="margin-top: 10px; display: block; text-align: center;">ADQUIRIR</a>
                     </div>
                 </div>
                 {% endfor %}
@@ -104,26 +118,63 @@
         </section>
 
         <section class="category-section">
-            <h3 class="category-title" style="color: #00ff41; margin-left: 10px;">🛒 INFOPRODUTOS</h3>
+            <h3 class="category-title" style="color: white;">📚 E-BOOKS PREMIUM</h3>
             <div class="product-shelf">
-                {% for p in produtos if p.tipo == 'infoproduto' %}
+                {% for p in produtos if p.tipo == 'ebook' %}
                 <div class="product-item-box">
                     <div class="product-img-container">
-                        <img src="{{ p.imagem_url }}" alt="{{ p.nome }}" onerror="this.src='https://placehold.co/600x400/161b22/00ff41?text=Infoproduto'">
+                        <img src="{{ p.imagem_url }}" alt="{{ p.nome }}" onerror="this.src='https://placehold.co/600x400/161b22/ffffff?text=E-book'">
                     </div>
                     <div class="info" style="padding: 15px;">
                         <strong>{{ p.nome }}</strong>
-                        <span style="font-size: 0.7rem; color: #8b949e; display: block;">{{ p.descricao }}</span>
-                        <a href="{{ p.link_venda }}" target="_blank" class="btn-action" style="background: #00ff41; color: black; margin-top: 10px; display: block; text-align: center;">VER OFERTA</a>
+                        <span class="price-tag" style="color: white;">{{ p.preco }}</span>
+                        <a href="{{ p.arquivo_url }}" download class="btn-action btn-ebook" style="margin-top: 10px; display: block; text-align: center;">BAIXAR AGORA</a>
                     </div>
                 </div>
                 {% endfor %}
             </div>
         </section>
 
+        <section class="category-section">
+            <h3 class="category-title" style="color: #00ff41;">🛒 PARCEIROS</h3>
+            <div class="product-shelf">
+                {% for p in produtos if p.tipo == 'infoproduto' %}
+                <div class="product-item-box">
+                    <div class="product-img-container">
+                        <img src="{{ p.imagem_url }}" alt="{{ p.nome }}" onerror="this.src='https://placehold.co/600x400/161b22/00ff41?text=Parceiro'">
+                    </div>
+                    <div class="info" style="padding: 15px;">
+                        <strong>{{ p.nome }}</strong>
+                        <span style="font-size: 0.7rem; color: #8b949e; display: block;">{{ p.descricao }}</span>
+                        <a href="{{ p.link_venda }}" target="_blank" class="btn-action btn-partner" style="margin-top: 10px; display: block; text-align: center;">VER OFERTA</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="category-section">
+            <h3 class="category-title" style="color: #8b949e;">🔗 OUTROS PROJETOS</h3>
+            <div class="product-shelf">
+                <div class="product-item-box" style="opacity: 0.6;">
+                    <div class="product-img-container" style="background: #222; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 3rem;">🔒</span>
+                    </div>
+                    <div class="info" style="padding: 15px;">
+                        <strong>Robô de Informação</strong>
+                        <span style="font-size: 0.65rem; color: #ff9100; display: block;">EM DESENVOLVIMENTO</span>
+                        <button class="btn-action" style="background: #333; color: #777; margin-top: 10px; width: 100%; border: none; padding: 10px; border-radius: 5px; cursor: not-allowed;" disabled>AGUARDE</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="obs-box-final" style="margin-top: 40px; text-align: center; color: #555; font-size: 0.8rem;">
+            <p><strong>OBS:</strong> Todos os produtos têm suporte e atualizações mensais.</p>
+        </div>
     </main>
 
-    <footer class="main-footer" style="text-align: center; padding: 40px; opacity: 0.5;">
+    <footer class="main-footer" style="text-align: center; padding: 40px; border-top: 1px solid #30363d; margin-top: 40px;">
         <p>&copy; 2026 Marketplace IA</p>
     </footer>
 </body>
