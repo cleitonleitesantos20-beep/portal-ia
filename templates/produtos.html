@@ -9,17 +9,16 @@
         /* --- ESTILO DO CARROSSEL (CORRIGIDO PARA MOBILE) --- */
         .product-shelf {
             display: flex;
-            flex-wrap: nowrap; /* OBRIGATÓRIO: Impede que os itens quebrem linha */
-            overflow-x: auto;  /* Habilita o scroll lateral */
-            -webkit-overflow-scrolling: touch; /* Deixa o deslize suave no iPhone */
+            flex-wrap: nowrap; 
+            overflow-x: auto;  
+            -webkit-overflow-scrolling: touch; 
             gap: 15px;
-            padding: 10px 5px 25px 5px; /* Espaço extra embaixo para a barra de rolagem */
-            scroll-snap-type: x mandatory; /* Efeito magnético */
+            padding: 10px 5px 25px 5px; 
+            scroll-snap-type: x mandatory; 
         }
         
-        /* Personalização da barra de rolagem */
         .product-shelf::-webkit-scrollbar {
-            height: 6px; /* Barra um pouco mais visível para indicar que tem mais */
+            height: 6px; 
         }
         .product-shelf::-webkit-scrollbar-track {
             background: #0d1117;
@@ -30,8 +29,8 @@
         }
 
         .product-item-box {
-            flex: 0 0 auto; /* OBRIGATÓRIO: Impede o card de encolher */
-            width: 260px;   /* Largura fixa */
+            flex: 0 0 auto; 
+            width: 260px;   
             scroll-snap-align: start;
             background: #161b22;
             border-radius: 12px;
@@ -39,9 +38,10 @@
             border: 1px solid #30363d;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Área da Imagem */
         .product-img-container {
             width: 100%;
             height: 150px;
@@ -55,6 +55,14 @@
             object-fit: cover;
         }
         
+        .product-description {
+            font-size: 0.75rem;
+            color: #8b949e;
+            margin: 5px 0 10px 0;
+            display: block;
+            line-height: 1.2;
+        }
+
         /* Botões Específicos */
         .btn-ebook { background: white; color: black; }
         .btn-trade { background: #ff9100; color: white; }
@@ -89,12 +97,11 @@
                     </div>
                     <div class="info" style="padding: 15px;">
                         <strong>{{ p.nome }}</strong>
+                        <span class="product-description">{{ p.descricao }}</span>
                         <span class="price-tag" style="color: var(--neon-blue);">{{ p.preco }}</span>
                         <a href="/app/acesso/{{ p.slug }}" class="btn-action btn-access" style="margin-top: 10px; display: block; text-align: center;">ACESSAR PAINEL</a>
                     </div>
                 </div>
-                {% else %}
-                <p style="color: #555; padding: 20px;">Nenhum robô disponível no momento.</p>
                 {% endfor %}
             </div>
         </section>
@@ -109,6 +116,7 @@
                     </div>
                     <div class="info" style="padding: 15px;">
                         <strong>{{ p.nome }}</strong>
+                        <span class="product-description">{{ p.descricao }}</span>
                         <span class="price-tag" style="color: #ff9100;">{{ p.preco }}</span>
                         <a href="{{ p.link_venda }}" class="btn-action btn-trade" style="margin-top: 10px; display: block; text-align: center;">ADQUIRIR</a>
                     </div>
@@ -127,6 +135,7 @@
                     </div>
                     <div class="info" style="padding: 15px;">
                         <strong>{{ p.nome }}</strong>
+                        <span class="product-description">{{ p.descricao }}</span>
                         <span class="price-tag" style="color: white;">{{ p.preco }}</span>
                         <a href="{{ p.arquivo_url }}" download class="btn-action btn-ebook" style="margin-top: 10px; display: block; text-align: center;">BAIXAR AGORA</a>
                     </div>
@@ -145,7 +154,7 @@
                     </div>
                     <div class="info" style="padding: 15px;">
                         <strong>{{ p.nome }}</strong>
-                        <span style="font-size: 0.7rem; color: #8b949e; display: block;">{{ p.descricao }}</span>
+                        <span class="product-description">{{ p.descricao }}</span>
                         <a href="{{ p.link_venda }}" target="_blank" class="btn-action btn-partner" style="margin-top: 10px; display: block; text-align: center;">VER OFERTA</a>
                     </div>
                 </div>
@@ -162,6 +171,7 @@
                     </div>
                     <div class="info" style="padding: 15px;">
                         <strong>Robô de Informação</strong>
+                        <span class="product-description">Sistema de análise de dados em tempo real para 2026.</span>
                         <span style="font-size: 0.65rem; color: #ff9100; display: block;">EM DESENVOLVIMENTO</span>
                         <button class="btn-action" style="background: #333; color: #777; margin-top: 10px; width: 100%; border: none; padding: 10px; border-radius: 5px; cursor: not-allowed;" disabled>AGUARDE</button>
                     </div>
@@ -169,9 +179,6 @@
             </div>
         </section>
 
-        <div class="obs-box-final" style="margin-top: 40px; text-align: center; color: #555; font-size: 0.8rem;">
-            <p><strong>OBS:</strong> Todos os produtos têm suporte e atualizações mensais.</p>
-        </div>
     </main>
 
     <footer class="main-footer" style="text-align: center; padding: 40px; border-top: 1px solid #30363d; margin-top: 40px;">
