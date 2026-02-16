@@ -29,6 +29,10 @@
                 <div class="post-meta">Publicado em 2026 • Por Especialista em IA</div>
             </header>
 
+            <div class="post-image-container" style="margin-bottom: 30px; border-radius: 12px; overflow: hidden; border: 1px solid #30363d;">
+                <img src="{{ noticia.imagem_url }}" alt="{{ noticia.titulo }}" style="width: 100%; height: auto; display: block;" onerror="this.src='https://placehold.co/800x400/161b22/00d4ff?text=Portal+IA'">
+            </div>
+
             <div class="post-content">
                 {{ noticia.conteudo }}
             </div>
