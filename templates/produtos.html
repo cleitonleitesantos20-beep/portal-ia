@@ -5,12 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marketplace IA | Painel de Ferramentas</title>
     <link rel="stylesheet" href="/static/style.css">
+    <style>
+        /* Estilo para criar o Carrossel Lateral */
+        .product-shelf {
+            display: flex;
+            overflow-x: auto; /* Permite scroll lateral */
+            gap: 15px;
+            padding: 10px 5px 20px 5px;
+            scroll-snap-type: x mandatory; /* Faz o "imã" no item ao deslizar */
+            scrollbar-width: thin; /* Deixa a barra fina no Firefox */
+        }
+        
+        /* Esconde a barra de scroll no Chrome/Safari para ficar mais limpo */
+        .product-shelf::-webkit-scrollbar {
+            height: 4px;
+        }
+        .product-shelf::-webkit-scrollbar-thumb {
+            background: var(--neon-blue);
+            border-radius: 10px;
+        }
+
+        .product-item-box {
+            min-width: 260px; /* Largura fixa para os itens no carrossel */
+            scroll-snap-align: start;
+            flex-shrink: 0; /* Impede que o item esprema */
+            background: #161b22;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #30363d;
+        }
+
+        /* Correção da Imagem */
+        .product-img-container {
+            width: 100%;
+            height: 140px;
+            background-color: #0d1117;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .product-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Faz a imagem preencher o espaço sem distorcer */
+        }
+    </style>
 </head>
 <body>
     <nav class="simple-nav">
         <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
             <a href="/" class="back-link">← Voltar ao Portal</a>
-            <span style="color: var(--neon-purple); font-weight: bold; font-size: 0.8rem;">LOJA OFICIAL</span>
+            <span style="color: #bc8cff; font-weight: bold; font-size: 0.8rem;">LOJA OFICIAL</span>
         </div>
     </nav>
 
@@ -21,84 +68,62 @@
     <main class="container">
         
         <section class="category-section">
-            <h3 class="category-title" style="color: var(--neon-blue);">🤖 AUXILIADORES</h3>
+            <h3 class="category-title" style="color: var(--neon-blue); margin-left: 10px;">🤖 AUXILIADORES</h3>
             <div class="product-shelf">
                 {% for p in produtos if p.tipo == 'web_bot' %}
                 <div class="product-item-box">
-                    <div class="info">
+                    <div class="product-img-container">
+                        <img src="{{ p.imagem_url }}" alt="{{ p.nome }}" onerror="this.src='https://placehold.co/600x400/161b22/00d4ff?text=IA+Bot'">
+                    </div>
+                    <div class="info" style="padding: 15px;">
                         <strong>{{ p.nome }}</strong>
                         <span class="price-tag">{{ p.preco }}</span>
+                        <a href="/app/acesso/{{ p.slug }}" class="btn-action" style="margin-top: 10px; display: block; text-align: center;">ACESSAR</a>
                     </div>
-                    <a href="/app/acesso/{{ p.slug }}" class="btn-action">ACESSAR</a>
                 </div>
                 {% endfor %}
             </div>
         </section>
 
         <section class="category-section">
-            <h3 class="category-title" style="color: #ff9100;">📊 TRADES</h3>
+            <h3 class="category-title" style="color: #ff9100; margin-left: 10px;">📊 TRADES</h3>
             <div class="product-shelf">
                 {% for p in produtos if p.tipo == 'trade_bot' %}
                 <div class="product-item-box">
-                    <div class="info">
+                    <div class="product-img-container">
+                        <img src="{{ p.imagem_url }}" alt="{{ p.nome }}" onerror="this.src='https://placehold.co/600x400/161b22/ff9100?text=Trade+Bot'">
+                    </div>
+                    <div class="info" style="padding: 15px;">
                         <strong>{{ p.nome }}</strong>
                         <span class="price-tag">{{ p.preco }}</span>
+                        <a href="{{ p.link_venda }}" class="btn-action" style="background: #ff9100; margin-top: 10px; display: block; text-align: center;">COMPRAR</a>
                     </div>
-                    <a href="{{ p.link_venda }}" class="btn-action" style="background: #ff9100;">COMPRAR</a>
                 </div>
                 {% endfor %}
             </div>
         </section>
 
         <section class="category-section">
-            <h3 class="category-title" style="color: white;">📚 E-BOOKS</h3>
-            <div class="product-shelf">
-                {% for p in produtos if p.tipo == 'ebook' %}
-                <div class="product-item-box">
-                    <div class="info">
-                        <strong>{{ p.nome }}</strong>
-                        <span class="price-tag">{{ p.preco }}</span>
-                    </div>
-                    <a href="{{ p.arquivo_url }}" download class="btn-action" style="background: white; color: black;">BAIXAR</a>
-                </div>
-                {% endfor %}
-            </div>
-        </section>
-
-        <section class="category-section">
-            <h3 class="category-title" style="color: #00ff41;">🛒 INFOPRODUTOS PARCEIROS</h3>
+            <h3 class="category-title" style="color: #00ff41; margin-left: 10px;">🛒 INFOPRODUTOS</h3>
             <div class="product-shelf">
                 {% for p in produtos if p.tipo == 'infoproduto' %}
                 <div class="product-item-box">
-                    <div class="info">
-                        <strong>{{ p.nome }}</strong>
-                        <span style="font-size: 0.6rem; color: #8b949e;">Loja: {{ p.descricao }}</span>
+                    <div class="product-img-container">
+                        <img src="{{ p.imagem_url }}" alt="{{ p.nome }}" onerror="this.src='https://placehold.co/600x400/161b22/00ff41?text=Infoproduto'">
                     </div>
-                    <a href="{{ p.link_venda }}" target="_blank" class="btn-action" style="background: #00ff41; color: black;">VER OFERTA</a>
+                    <div class="info" style="padding: 15px;">
+                        <strong>{{ p.nome }}</strong>
+                        <span style="font-size: 0.7rem; color: #8b949e; display: block;">{{ p.descricao }}</span>
+                        <a href="{{ p.link_venda }}" target="_blank" class="btn-action" style="background: #00ff41; color: black; margin-top: 10px; display: block; text-align: center;">VER OFERTA</a>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
         </section>
 
-        <section class="category-section">
-            <h3 class="category-title" style="color: #8b949e;">🔗 OUTROS</h3>
-            <div class="product-shelf">
-                <div class="product-item-box" style="opacity: 0.7; border-left: 2px solid #555;">
-                    <div class="info">
-                        <strong>Robô de Informação</strong>
-                        <span style="font-size: 0.65rem; color: #ff9100;">EM DESENVOLVIMENTO...</span>
-                    </div>
-                    <button class="btn-action" style="background: #333; cursor: not-allowed;" disabled>AGUARDE</button>
-                </div>
-            </div>
-        </section>
-
-        <div class="obs-box-final">
-            <strong>OBS:</strong> Todos os robôs ou e-books têm informações baseadas em algoritmos e prezam pela manutenção semanal ou mensal para performance ideal.
-        </div>
     </main>
 
-    <footer class="main-footer">
+    <footer class="main-footer" style="text-align: center; padding: 40px; opacity: 0.5;">
         <p>&copy; 2026 Marketplace IA</p>
     </footer>
 </body>
