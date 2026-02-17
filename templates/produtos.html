@@ -88,7 +88,7 @@
     <main class="container">
         
         <section class="category-section">
-            <h3 class="category-title" style="color: var(--neon-blue);">🤖 AUXILIADORES</h3>
+            <h3 class="category-title" style="color: var(--neon-blue);">🤖 AUXILIADORES (ARQUIVOS .ZIP)</h3>
             <div class="product-shelf">
                 {% for p in produtos if p.tipo == 'web_bot' %}
                 <div class="product-item-box">
@@ -99,7 +99,7 @@
                         <strong>{{ p.nome }}</strong>
                         <span class="product-description">{{ p.descricao }}</span>
                         <span class="price-tag" style="color: var(--neon-blue);">{{ p.preco }}</span>
-                        <a href="/app/acesso/{{ p.slug }}" class="btn-action btn-access" style="margin-top: 10px; display: block; text-align: center;">ACESSAR PAINEL</a>
+                        <a href="{{ p.link_venda }}" class="btn-action btn-access" style="margin-top: 10px; display: block; text-align: center;">ADQUIRIR ACESSO</a>
                     </div>
                 </div>
                 {% endfor %}
@@ -107,7 +107,7 @@
         </section>
 
         <section class="category-section">
-            <h3 class="category-title" style="color: #ff9100;">📊 TRADES & SINAIS</h3>
+            <h3 class="category-title" style="color: #ff9100;">📊 TRADES & SINAIS (ARQUIVOS .EXE)</h3>
             <div class="product-shelf">
                 {% for p in produtos if p.tipo == 'trade_bot' %}
                 <div class="product-item-box">
@@ -118,7 +118,7 @@
                         <strong>{{ p.nome }}</strong>
                         <span class="product-description">{{ p.descricao }}</span>
                         <span class="price-tag" style="color: #ff9100;">{{ p.preco }}</span>
-                        <a href="{{ p.link_venda }}" class="btn-action btn-trade" style="margin-top: 10px; display: block; text-align: center;">ADQUIRIR</a>
+                        <a href="{{ p.link_venda }}" class="btn-action btn-trade" style="margin-top: 10px; display: block; text-align: center;">ADQUIRIR ACESSO</a>
                     </div>
                 </div>
                 {% endfor %}
@@ -137,7 +137,7 @@
                         <strong>{{ p.nome }}</strong>
                         <span class="product-description">{{ p.descricao }}</span>
                         <span class="price-tag" style="color: white;">{{ p.preco }}</span>
-                        <a href="{{ p.arquivo_url }}" download class="btn-action btn-ebook" style="margin-top: 10px; display: block; text-align: center;">BAIXAR AGORA</a>
+                        <a href="{{ p.link_venda }}" class="btn-action btn-ebook" style="margin-top: 10px; display: block; text-align: center;">ADQUIRIR ACESSO</a>
                     </div>
                 </div>
                 {% endfor %}
