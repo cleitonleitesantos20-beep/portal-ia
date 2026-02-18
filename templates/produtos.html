@@ -99,7 +99,7 @@
                         <strong>{{ p.nome }}</strong>
                         <span class="product-description">{{ p.descricao }}</span>
                         <span class="price-tag" style="color: var(--neon-blue);">{{ p.preco }}</span>
-                        <a href="{{ p.link_venda }}" class="btn-action btn-access" style="margin-top: 10px; display: block; text-align: center;">ADQUIRIR ACESSO</a>
+                        <a href="{{ p.link_venda }}" target="_blank" class="btn-action btn-access" style="margin-top: 10px; display: block; text-align: center;">ADQUIRIR ACESSO</a>
                     </div>
                 </div>
                 {% endfor %}
@@ -118,7 +118,7 @@
                         <strong>{{ p.nome }}</strong>
                         <span class="product-description">{{ p.descricao }}</span>
                         <span class="price-tag" style="color: #ff9100;">{{ p.preco }}</span>
-                        <a href="{{ p.link_venda }}" class="btn-action btn-trade" style="margin-top: 10px; display: block; text-align: center;">ADQUIRIR ACESSO</a>
+                        <a href="{{ p.link_venda }}" target="_blank" class="btn-action btn-trade" style="margin-top: 10px; display: block; text-align: center;">ADQUIRIR ACESSO</a>
                     </div>
                 </div>
                 {% endfor %}
@@ -137,7 +137,7 @@
                         <strong>{{ p.nome }}</strong>
                         <span class="product-description">{{ p.descricao }}</span>
                         <span class="price-tag" style="color: white;">{{ p.preco }}</span>
-                        <a href="{{ p.link_venda }}" class="btn-action btn-ebook" style="margin-top: 10px; display: block; text-align: center;">ADQUIRIR ACESSO</a>
+                        <a href="{{ p.link_venda }}" target="_blank" class="btn-action btn-ebook" style="margin-top: 10px; display: block; text-align: center;">ADQUIRIR ACESSO</a>
                     </div>
                 </div>
                 {% endfor %}
