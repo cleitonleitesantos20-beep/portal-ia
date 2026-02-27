@@ -7,209 +7,101 @@
     <link rel="stylesheet" href="/static/style.css">
     <style>
         :root {
-            --bg-black: #0d1117;
-            --card-gray: #161b22;
-            --border-gray: #30363d;
-            --neon-blue: #00d4ff;
-            --neon-purple: #bc8cff;
-            --text-gray: #8b949e;
+            --bg-black: #0d1117; --card-gray: #161b22; --border-gray: #30363d;
+            --neon-blue: #00d4ff; --neon-purple: #bc8cff; --text-gray: #8b949e; --danger: #ff4d4d;
         }
-
-        body { 
-            background: var(--bg-black); 
-            color: white; 
-            padding: 20px; 
-            font-family: 'Inter', system-ui, sans-serif; 
-        }
-        
-        .admin-container { 
-            max-width: 850px; 
-            margin: 40px auto; 
-            background: var(--card-gray); 
-            padding: 40px; 
-            border-radius: 20px; 
-            border: 1px solid var(--border-gray);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        /* Topo do Painel */
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 35px;
-        }
-
-        /* Sistema de Abas Navegação */
-        .tab-menu { 
-            display: flex; 
-            gap: 15px; 
-            margin-bottom: 30px; 
-            border-bottom: 1px solid var(--border-gray); 
-        }
-        
-        .tab-btn { 
-            background: transparent; 
-            border: none; 
-            color: var(--text-gray); 
-            padding: 12px 25px; 
-            cursor: pointer; 
-            font-weight: 600; 
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            border-bottom: 3px solid transparent;
-        }
-        
-        .tab-btn.active { 
-            color: var(--neon-blue); 
-            border-bottom-color: var(--neon-blue); 
-        }
-
+        body { background: var(--bg-black); color: white; padding: 20px; font-family: 'Inter', sans-serif; }
+        .admin-container { max-width: 950px; margin: 40px auto; background: var(--card-gray); padding: 30px; border-radius: 20px; border: 1px solid var(--border-gray); }
+        .tab-menu { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 1px solid var(--border-gray); overflow-x: auto; }
+        .tab-btn { background: transparent; border: none; color: var(--text-gray); padding: 12px 20px; cursor: pointer; font-weight: 600; white-space: nowrap; border-bottom: 3px solid transparent; }
+        .tab-btn.active { color: var(--neon-blue); border-bottom-color: var(--neon-blue); }
         .tab-content { display: none; animation: fadeIn 0.4s ease; }
         .tab-content.active { display: block; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Formulários */
-        form { display: flex; flex-direction: column; gap: 20px; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        input, textarea, select { padding: 12px; background: #0d1117; border: 1px solid var(--border-gray); color: white; border-radius: 8px; }
+        .btn-submit { background: var(--neon-blue); color: black; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         
-        label { font-size: 0.85rem; color: var(--text-gray); font-weight: 500; }
-
-        input, textarea, select { 
-            padding: 14px; 
-            background: #0d1117; 
-            border: 1px solid var(--border-gray); 
-            color: white; 
-            border-radius: 10px; 
-            font-size: 1rem;
-            transition: 0.3s;
-        }
-
-        input:focus, textarea:focus, select:focus { 
-            border-color: var(--neon-blue); 
-            outline: none;
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.1);
-        }
-
-        /* Botões */
-        .btn-submit { 
-            background: var(--neon-blue); 
-            color: black; 
-            border: none; 
-            padding: 18px; 
-            border-radius: 10px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: 0.3s;
-            margin-top: 10px;
-        }
-
-        .btn-submit:hover { 
-            filter: brightness(1.2);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
-        }
-
-        .purple-btn { background: var(--neon-purple); }
-        .purple-btn:hover { box-shadow: 0 5px 15px rgba(188, 140, 255, 0.3); }
-
+        /* Estilo da Lista de Gerenciamento */
+        .manage-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid var(--border-gray); }
+        .manage-item:hover { background: #1c2128; }
+        .btn-delete { background: var(--danger); color: white; border: none; padding: 5px 12px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
     <div class="admin-container">
-        <header class="admin-header">
-            <h1 style="margin: 0; font-size: 1.4rem; letter-spacing: 1px;">
-                PAINEL <span style="color: var(--neon-blue);">CONTROLE</span>
-            </h1>
-            <a href="/" style="color: var(--text-gray); text-decoration: none; font-size: 0.85rem; border: 1px solid var(--border-gray); padding: 5px 12px; border-radius: 6px;">
-                Sair do Sistema
-            </a>
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <h1 style="margin: 0; font-size: 1.2rem;">PAINEL DE <span style="color: var(--neon-blue);">CONTROLE</span></h1>
+            <a href="/" style="color: var(--text-gray); text-decoration: none; font-size: 0.8rem;">Sair</a>
         </header>
 
         <nav class="tab-menu">
-            <button class="tab-btn active" onclick="openTab(event, 'noticia')">📰 POSTAR NOTÍCIA</button>
-            <button class="tab-btn" onclick="openTab(event, 'produto')">🛒 CADASTRAR PRODUTO</button>
+            <button class="tab-btn active" onclick="openTab(event, 'noticia')">📰 NOVA NOTÍCIA</button>
+            <button class="tab-btn" onclick="openTab(event, 'produto')">🛒 NOVO PRODUTO</button>
+            <button class="tab-btn" onclick="openTab(event, 'gerenciar')">🛠️ GERENCIAR ATUAIS</button>
         </nav>
 
         <div id="noticia" class="tab-content active">
             <form action="/admin/postar" method="post">
-                <div class="form-group">
-                    <label>Título do Artigo</label>
-                    <input type="text" name="titulo" placeholder="Ex: O impacto da IA na medicina" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Categoria</label>
-                    <input type="text" name="categoria" placeholder="Ex: Tecnologia, Robótica, Saúde" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Link da Imagem de Capa</label>
-                    <input type="url" name="imagem_url" placeholder="https://exemplo.com/foto.jpg" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Conteúdo da Notícia</label>
-                    <textarea name="conteudo" placeholder="Escreva o artigo aqui... (Aceita HTML para negritos e links)" rows="10" required></textarea>
-                </div>
-
-                <button type="submit" class="btn-submit">Publicar no Portal</button>
+                <input type="text" name="titulo" placeholder="Título da Notícia" required>
+                <input type="text" name="categoria" placeholder="Categoria" required>
+                <input type="url" name="imagem_url" placeholder="URL da Imagem" required>
+                <textarea name="conteudo" placeholder="Conteúdo..." rows="6" required></textarea>
+                <button type="submit" class="btn-submit">Publicar Notícia</button>
             </form>
         </div>
 
         <div id="produto" class="tab-content">
             <form action="/admin/cadastrar_produto" method="post">
-                <div class="form-group">
-                    <label>Nome do Produto/Robô</label>
-                    <input type="text" name="nome" placeholder="Ex: Nexus Mines Bot" required>
+                <div class="form-row">
+                    <input type="text" name="nome" placeholder="Nome do Produto" required>
+                    <input type="text" name="categoria_txt" placeholder="Categoria Visual" required>
                 </div>
-
-                <div class="form-group">
-                    <label>Categoria Visual</label>
-                    <input type="text" name="categoria_txt" placeholder="Ex: Auxiliador, Trade, Itens" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Tipo de Sistema (Filtro)</label>
+                <div class="form-row">
                     <select name="tipo">
-                        <option value="web_bot">🤖 Auxiliador / Web Bot</option>
-                        <option value="trade_bot">📊 Trade / Sinais</option>
-                        <option value="ebook">📚 E-book Premium</option>
-                        <option value="infoproduto">🛒 Infoproduto / Parceiro</option>
+                        <option value="web_bot">🤖 Web Bot</option>
+                        <option value="trade_bot">📊 Trade Bot</option>
+                        <option value="ebook">📚 E-book</option>
+                        <option value="infoproduto">🛒 Infoproduto</option>
                     </select>
+                    <input type="text" name="preco" placeholder="Preço (Opcional)">
                 </div>
-
-                <div class="form-group">
-                    <label>Preço (Opcional)</label>
-                    <input type="text" name="preco" placeholder="Ex: R$ 49,90 / mês">
-                </div>
-
-                <div class="form-group">
-                    <label>Link da Imagem (Card)</label>
-                    <input type="url" name="imagem_url" placeholder="https://exemplo.com/card.jpg" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Link de Destino (Checkout/Link Afiliado)</label>
-                    <input type="url" name="link_venda" placeholder="https://hotmart.com/seu-link" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Descrição Curta</label>
-                    <textarea name="descricao" placeholder="Explique brevemente o que o produto faz..." rows="3" required></textarea>
-                </div>
-
-                <button type="submit" class="btn-submit purple-btn">Inserir no Marketplace</button>
+                <input type="url" name="imagem_url" placeholder="URL da Imagem do Card" required>
+                
+                <h3 style="font-size: 0.9rem; color: var(--neon-purple); margin-bottom: 0;">Links de Venda (Multi-Plataforma)</h3>
+                <input type="url" name="link_venda" placeholder="Link Principal (ex: Kiwify)" required>
+                <input type="url" name="link_venda_2" placeholder="Link Alternativo 2 (ex: Hotmart)">
+                <input type="url" name="link_venda_3" placeholder="Link Alternativo 3 (ex: Shopee)">
+                
+                <textarea name="descricao" placeholder="Descrição curta..." rows="3" required></textarea>
+                <button type="submit" class="btn-submit" style="background: var(--neon-purple);">Cadastrar Produto</button>
             </form>
+        </div>
+
+        <div id="gerenciar" class="tab-content">
+            <h2 style="font-size: 1rem; color: var(--neon-blue);">Gerenciar Conteúdo Existente</h2>
+            
+            <div style="margin-top: 20px;">
+                <h3 style="font-size: 0.9rem; border-left: 3px solid var(--neon-blue); padding-left: 10px;">Notícias</h3>
+                <div id="lista-noticias">
+                    <p style="color: var(--text-gray); font-size: 0.8rem;">Acesse a Home para ver os IDs ou use a rota de exclusão direta.</p>
+                </div>
+
+                <h3 style="font-size: 0.9rem; border-left: 3px solid var(--neon-purple); padding-left: 10px; margin-top: 30px;">Produtos</h3>
+                <p style="color: var(--text-gray); font-size: 0.8rem;">Para excluir, use os botões abaixo (Exemplo rápido):</p>
+                 <form action="/admin/excluir/noticia/" method="get" style="flex-direction: row; gap: 5px;">
+                    <input type="number" name="id" placeholder="ID da Notícia" style="width: 100px;">
+                    <button class="btn-delete" type="submit">Excluir Notícia</button>
+                 </form>
+                 <br>
+                 <form action="/admin/excluir/produto/" method="get" style="flex-direction: row; gap: 5px;">
+                    <input type="number" name="id" placeholder="ID do Produto" style="width: 100px;">
+                    <button class="btn-delete" type="submit">Excluir Produto</button>
+                 </form>
+            </div>
         </div>
     </div>
 
@@ -217,10 +109,8 @@
         function openTab(evt, tabId) {
             const contents = document.querySelectorAll(".tab-content");
             const buttons = document.querySelectorAll(".tab-btn");
-
-            contents.forEach(content => content.classList.remove("active"));
-            buttons.forEach(btn => btn.classList.remove("active"));
-
+            contents.forEach(c => c.classList.remove("active"));
+            buttons.forEach(b => b.classList.remove("active"));
             document.getElementById(tabId).classList.add("active");
             evt.currentTarget.classList.add("active");
         }
