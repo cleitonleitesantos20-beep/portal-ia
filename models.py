@@ -10,9 +10,9 @@ class Noticia(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     titulo = Column(String(200))
-    categoria = Column(String(50)) # Ex: Robótica, IA
+    categoria = Column(String(50)) # Ex: Robótica, IA, Estratégia
     conteudo = Column(Text)
-    imagem_url = Column(String(500)) # Link da imagem da notícia
+    imagem_url = Column(String(500)) 
     data_criacao = Column(DateTime, default=datetime.utcnow)
 
 class Produto(Base):
@@ -21,20 +21,26 @@ class Produto(Base):
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String(100))
     
-    # O 'slug' servirá para criar a URL individual (ex: /app/acesso/mines)
+    # O 'slug' é essencial para as rotas de acesso (ex: /app/acesso/mines)
     slug = Column(String(100), unique=True, index=True) 
     
     descricao = Column(Text)
-    preco = Column(String(50))  # Ex: "R$ 97,00 / mês"
     
-    # tipo: 'web_bot' (SaaS), 'trade_bot' (PC), 'ebook' (Download), 'afiliado'
+    # Deixamos o preço como opcional (nullable=True) 
+    # Já que no seu novo layout os preços foram removidos visualmente
+    preco = Column(String(50), nullable=True)  
+    
+    # tipo: 'web_bot', 'trade_bot', 'ebook', 'infoproduto'
+    # Importante: mantenha 'infoproduto' para a seção que agora chamamos de 'ITENS'
     tipo = Column(String(50))   
     
-    # categoria: 'Cripto', 'Forex', 'Cassino', 'Ebook', 'Info'
+    # categoria: 'Auxiliador', 'Trade', 'Educação', 'Itens'
     categoria = Column(String(50)) 
     
     imagem_url = Column(String(500))
-    link_venda = Column(String(500)) # Link do checkout
     
-    # arquivo_url: Link direto para o PDF ou Instalador EXE
+    # Link de destino (Checkout, Hotmart, Shopee, Amazon, etc.)
+    link_venda = Column(String(500)) 
+    
+    # arquivo_url: Para casos onde você ainda queira fornecer um download direto
     arquivo_url = Column(String(500), nullable=True)
