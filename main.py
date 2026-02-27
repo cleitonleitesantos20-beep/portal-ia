@@ -5,18 +5,18 @@ from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 import models
 from database import SessionLocal, criar_banco
-import re  # [NOVO] Importado para gerar URLs amigáveis (slugs)
+import re
 
 app = FastAPI()
 
-# 1. Inicializa o banco (Garante que as tabelas existam ao iniciar)
+# 1. Inicializa o banco (Garante que as tabelas existam)
 criar_banco()
 
 # 2. Configurações de arquivos estáticos e templates
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# 3. Dependência para abrir e fechar a conexão com o banco de dados
+# 3. Dependência para conexão com o banco
 def get_db():
     db = SessionLocal()
     try:
@@ -40,31 +40,17 @@ async def pagina_noticia(request: Request, post_id: int, db: Session = Depends(g
 
 @app.get("/produtos")
 async def pagina_produtos(request: Request, db: Session = Depends(get_db)):
-    lista_db = db.query(models.Produto).all()
-    return templates.TemplateResponse("produtos.html", {"request": request, "produtos": lista_db})
+    produtos = db.query(models.Produto).all()
+    return templates.TemplateResponse("produtos.html", {"request": request, "produtos": produtos})
 
-# --- SISTEMA VIP ---
-
-@app.get("/app/acesso/{robo_slug}")
-async def login_robo_page(request: Request, robo_slug: str):
-    return templates.TemplateResponse("robo_vip.html", {"request": request, "slug": robo_slug})
-
-@app.post("/app/validar/{robo_slug}")
-async def validar_acesso(request: Request, robo_slug: str, chave: str = Form(...)):
-    CHAVE_ATUAL = "VIP2026_FEV" 
-    if chave == CHAVE_ATUAL:
-        return templates.TemplateResponse(f"paineis/{robo_slug}.html", {"request": request})
-    else:
-        return templates.TemplateResponse("robo_vip.html", {
-            "request": request, "slug": robo_slug, "erro": "❌ Chave inválida ou expirada."
-        })
-
-# --- ADMINISTRAÇÃO (POSTAR NOTÍCIAS E PRODUTOS) ---
+# --- ADMINISTRAÇÃO ---
 
 @app.get("/admin")
 async def pagina_admin(request: Request):
+    """ Exibe o painel administrativo """
     return templates.TemplateResponse("admin.html", {"request": request})
 
+# 1. Rota para Salvar Notícia
 @app.post("/admin/postar")
 async def salvar_noticia(
     titulo: str = Form(...), 
@@ -78,21 +64,22 @@ async def salvar_noticia(
     )
     db.add(nova_noticia)
     db.commit()
-    return RedirectResponse(url="/", status_code=303)
+    return RedirectResponse(url="/admin", status_code=303)
 
-# [NOVA ROTA] Salva o Produto vindo do Admin
+# 2. Rota para Salvar Produto (Com múltiplos links)
 @app.post("/admin/cadastrar_produto")
 async def salvar_produto(
     nome: str = Form(...),
     tipo: str = Form(...),
-    categoria_txt: str = Form(...), # Recebe o texto da categoria do Admin
-    preco: str = Form(None),         # Preço opcional
+    categoria_txt: str = Form(...),
+    preco: str = Form(None),
     imagem_url: str = Form(...),
-    link_venda: str = Form(...),
+    link_venda: str = Form(...),      # Link 1
+    link_venda_2: str = Form(None),   # Link 2 (opcional)
+    link_venda_3: str = Form(None),   # Link 3 (opcional)
     descricao: str = Form(...),
     db: Session = Depends(get_db)
 ):
-    # Lógica para criar o slug: "Nexus Mines" vira "nexus-mines"
     slug_gerado = re.sub(r'\W+', '-', nome.lower()).strip('-')
     
     novo_produto = models.Produto(
@@ -103,14 +90,35 @@ async def salvar_produto(
         preco=preco,
         imagem_url=imagem_url,
         link_venda=link_venda,
+        link_venda_2=link_venda_2,
+        link_venda_3=link_venda_3,
         descricao=descricao
     )
     
     try:
         db.add(novo_produto)
         db.commit()
-        return RedirectResponse(url="/produtos", status_code=303)
-    except Exception as e:
+        return RedirectResponse(url="/admin", status_code=303)
+    except Exception:
         db.rollback()
-        # Se o slug já existir, dará erro de integridade (unique constraint)
-        raise HTTPException(status_code=400, detail="Erro: Este nome de produto já existe no sistema.")
+        raise HTTPException(status_code=400, detail="Erro ao cadastrar: Nome ou Slug duplicado.")
+
+# --- ROTAS DE EXCLUSÃO (GERENCIAMENTO) ---
+
+@app.get("/admin/excluir/noticia/")
+async def excluir_noticia(id: int, db: Session = Depends(get_db)):
+    """ Exclui uma notícia pelo ID """
+    item = db.query(models.Noticia).filter(models.Noticia.id == id).first()
+    if item:
+        db.delete(item)
+        db.commit()
+    return RedirectResponse(url="/admin", status_code=303)
+
+@app.get("/admin/excluir/produto/")
+async def excluir_produto(id: int, db: Session = Depends(get_db)):
+    """ Exclui um produto pelo ID """
+    item = db.query(models.Produto).filter(models.Produto.id == id).first()
+    if item:
+        db.delete(item)
+        db.commit()
+    return RedirectResponse(url="/admin", status_code=303)
