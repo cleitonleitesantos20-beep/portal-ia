@@ -8,12 +8,14 @@ from database import SessionLocal, criar_banco
 
 app = FastAPI()
 
-# Inicializa o banco com as novas colunas (slug, categoria, etc.) [cite: 2026-01-31]
+# 1. Inicializa o banco (Garante que as tabelas existam ao iniciar)
 criar_banco()
 
+# 2. Configurações de arquivos estáticos e templates
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
+# 3. Dependência para abrir e fechar a conexão com o banco de dados
 def get_db():
     db = SessionLocal()
     try:
@@ -21,35 +23,39 @@ def get_db():
     finally:
         db.close()
 
-# --- ROTAS PÚBLICAS (PORTAL E LOJA) ---
+# --- ROTAS PÚBLICAS (PORTAL E MARKETPLACE) ---
 
 @app.get("/")
 async def home(request: Request, db: Session = Depends(get_db)):
-    # Puxa as notícias para o index.html [cite: 2026-02-15]
+    """ Página Inicial: Lista todas as notícias por ordem de chegada """
     noticias = db.query(models.Noticia).order_by(models.Noticia.id.desc()).all()
     return templates.TemplateResponse("index.html", {"request": request, "noticias": noticias})
 
-# NOVA ROTA: ESSA É A QUE ESTAVA FALTANDO PARA O "LER MAIS" FUNCIONAR [cite: 2026-02-05]
 @app.get("/post/{post_id}")
 async def pagina_noticia(request: Request, post_id: int, db: Session = Depends(get_db)):
-    # Busca a notícia específica pelo ID que veio do clique no HTML [cite: 2026-02-15]
+    """ Página da Notícia: Abre o conteúdo detalhado de um post """
     noticia = db.query(models.Noticia).filter(models.Noticia.id == post_id).first()
     
     if not noticia:
         raise HTTPException(status_code=404, detail="Notícia não encontrada")
     
-    # Renderiza o arquivo post.html que vi na sua pasta templates [cite: 2026-01-31]
     return templates.TemplateResponse("post.html", {"request": request, "noticia": noticia})
 
 @app.get("/produtos")
 async def pagina_produtos(request: Request, db: Session = Depends(get_db)):
-    lista_produtos = db.query(models.Produto).all()
-    return templates.TemplateResponse("produtos.html", {"request": request, "produtos": lista_produtos})
+    """ 
+    Marketplace Inteligente/A: 
+    Busca os itens e envia com a chave 'produtos' para o seu novo HTML 
+    """
+    lista_db = db.query(models.Produto).all()
+    # Enviamos como "produtos" para bater com o {% for p in produtos %}
+    return templates.TemplateResponse("produtos.html", {"request": request, "produtos": lista_db})
 
-# --- SISTEMA DE ACESSO DINÂMICO AOS ROBÔS ---
+# --- SISTEMA DE ACESSO AOS ROBÔS (VIP) ---
 
 @app.get("/app/acesso/{robo_slug}")
 async def login_robo_page(request: Request, robo_slug: str):
+    """ Exibe a tela de login para um robô específico """
     return templates.TemplateResponse("robo_vip.html", {
         "request": request, 
         "slug": robo_slug
@@ -57,10 +63,11 @@ async def login_robo_page(request: Request, robo_slug: str):
 
 @app.post("/app/validar/{robo_slug}")
 async def validar_acesso(request: Request, robo_slug: str, chave: str = Form(...)):
+    """ Valida a chave e libera o painel do robô """
     CHAVE_ATUAL = "VIP2026_FEV" 
     
     if chave == CHAVE_ATUAL:
-        # Tenta carregar o painel específico na pasta templates/paineis/ [cite: 2026-01-31]
+        # Carrega o painel interno da pasta templates/paineis/
         return templates.TemplateResponse(f"paineis/{robo_slug}.html", {"request": request})
     else:
         return templates.TemplateResponse("robo_vip.html", {
@@ -73,6 +80,7 @@ async def validar_acesso(request: Request, robo_slug: str, chave: str = Form(...
 
 @app.get("/admin")
 async def pagina_admin(request: Request):
+    """ Painel administrativo simples """
     return templates.TemplateResponse("admin.html", {"request": request})
 
 @app.post("/admin/postar")
@@ -83,6 +91,7 @@ async def salvar_noticia(
     imagem_url: str = Form(...),
     db: Session = Depends(get_db)
 ):
+    """ Salva uma nova notícia no banco de dados e volta para a Home """
     nova_noticia = models.Noticia(
         titulo=titulo,
         categoria=categoria,
@@ -91,4 +100,5 @@ async def salvar_noticia(
     )
     db.add(nova_noticia)
     db.commit()
+    # Redireciona para evitar reenvio de formulário ao atualizar a página
     return RedirectResponse(url="/", status_code=303)
