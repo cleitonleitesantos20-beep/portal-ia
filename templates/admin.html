@@ -3,123 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Admin - Portal IA</title>
+    <title>Master Admin | Inteligente/A</title>
     <link rel="stylesheet" href="/static/style.css">
     <style>
         :root {
-            --bg-dark: #0d1117;
-            --card-dark: #161b22;
-            --border-color: #30363d;
+            --bg-black: #0d1117;
+            --card-gray: #161b22;
+            --border-gray: #30363d;
             --neon-blue: #00d4ff;
             --neon-purple: #bc8cff;
+            --text-gray: #8b949e;
         }
 
-        body { background: var(--bg-dark); color: white; padding: 20px; font-family: sans-serif; }
+        body { 
+            background: var(--bg-black); 
+            color: white; 
+            padding: 20px; 
+            font-family: 'Inter', system-ui, sans-serif; 
+        }
         
         .admin-container { 
-            max-width: 900px; 
-            margin: 0 auto; 
-            background: var(--card-dark); 
-            padding: 30px; 
-            border-radius: 15px; 
-            border: 1px solid var(--border-color);
+            max-width: 850px; 
+            margin: 40px auto; 
+            background: var(--card-gray); 
+            padding: 40px; 
+            border-radius: 20px; 
+            border: 1px solid var(--border-gray);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* Sistema de Abas */
-        .tab-menu { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
-        .tab-btn { 
-            background: transparent; border: none; color: #8b949e; 
-            padding: 10px 20px; cursor: pointer; font-weight: bold; font-size: 1rem;
-            transition: 0.3s;
+        /* Topo do Painel */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
         }
-        .tab-btn.active { color: var(--neon-blue); border-bottom: 2px solid var(--neon-blue); }
-        .tab-content { display: none; }
+
+        /* Sistema de Abas Navegação */
+        .tab-menu { 
+            display: flex; 
+            gap: 15px; 
+            margin-bottom: 30px; 
+            border-bottom: 1px solid var(--border-gray); 
+        }
+        
+        .tab-btn { 
+            background: transparent; 
+            border: none; 
+            color: var(--text-gray); 
+            padding: 12px 25px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-btn.active { 
+            color: var(--neon-blue); 
+            border-bottom-color: var(--neon-blue); 
+        }
+
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
         .tab-content.active { display: block; }
 
-        /* Estilo dos Inputs */
-        form { display: flex; flex-direction: column; gap: 15px; }
-        input, textarea, select { 
-            padding: 12px; background: var(--bg-dark); 
-            border: 1px solid var(--border-color); 
-            color: white; border-radius: 8px; font-size: 1rem;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        input:focus { border-color: var(--neon-purple); outline: none; }
-        
-        .section-title { color: var(--neon-blue); margin-top: 0; }
-        label { font-size: 0.85rem; color: #8b949e; margin-bottom: -10px; }
 
-        .btn-postar { 
-            background: var(--neon-blue); color: black; border: none; 
-            padding: 15px; border-radius: 8px; font-weight: bold; 
-            cursor: pointer; transition: 0.3s; margin-top: 10px;
+        /* Formulários */
+        form { display: flex; flex-direction: column; gap: 20px; }
+        
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        
+        label { font-size: 0.85rem; color: var(--text-gray); font-weight: 500; }
+
+        input, textarea, select { 
+            padding: 14px; 
+            background: #0d1117; 
+            border: 1px solid var(--border-gray); 
+            color: white; 
+            border-radius: 10px; 
+            font-size: 1rem;
+            transition: 0.3s;
         }
-        .btn-postar:hover { opacity: 0.8; transform: translateY(-2px); }
+
+        input:focus, textarea:focus, select:focus { 
+            border-color: var(--neon-blue); 
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.1);
+        }
+
+        /* Botões */
+        .btn-submit { 
+            background: var(--neon-blue); 
+            color: black; 
+            border: none; 
+            padding: 18px; 
+            border-radius: 10px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover { 
+            filter: brightness(1.2);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .purple-btn { background: var(--neon-purple); }
+        .purple-btn:hover { box-shadow: 0 5px 15px rgba(188, 140, 255, 0.3); }
+
     </style>
 </head>
 <body>
 
     <div class="admin-container">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h1 style="margin: 0; font-size: 1.5rem;">GERENCIADOR <span style="color: var(--neon-purple);">IA</span></h1>
-            <a href="/" style="color: #8b949e; text-decoration: none; font-size: 0.9rem;">← Sair do Painel</a>
-        </div>
+        <header class="admin-header">
+            <h1 style="margin: 0; font-size: 1.4rem; letter-spacing: 1px;">
+                PAINEL <span style="color: var(--neon-blue);">CONTROLE</span>
+            </h1>
+            <a href="/" style="color: var(--text-gray); text-decoration: none; font-size: 0.85rem; border: 1px solid var(--border-gray); padding: 5px 12px; border-radius: 6px;">
+                Sair do Sistema
+            </a>
+        </header>
 
-        <div class="tab-menu">
-            <button class="tab-btn active" onclick="openTab(event, 'aba-noticia')">📰 Nova Notícia</button>
-            <button class="tab-btn" onclick="openTab(event, 'aba-produto')">🛒 Novo Produto/Robô</button>
-        </div>
+        <nav class="tab-menu">
+            <button class="tab-btn active" onclick="openTab(event, 'noticia')">📰 POSTAR NOTÍCIA</button>
+            <button class="tab-btn" onclick="openTab(event, 'produto')">🛒 CADASTRAR PRODUTO</button>
+        </nav>
 
-        <div id="aba-noticia" class="tab-content active">
-            <h2 class="section-title">Postar no Portal</h2>
+        <div id="noticia" class="tab-content active">
             <form action="/admin/postar" method="post">
-                <input type="text" name="titulo" placeholder="Título da Notícia" required>
-                <input type="text" name="categoria" placeholder="Categoria (ex: IA, Trade, Elon Musk)" required>
-                <input type="text" name="imagem_url" placeholder="URL da Imagem (Link direto)" required>
-                <textarea name="conteudo" placeholder="Conteúdo do Artigo (Aceita HTML básico)..." rows="8" required></textarea>
-                <button type="submit" class="btn-postar">PUBLICAR NOTÍCIA</button>
+                <div class="form-group">
+                    <label>Título do Artigo</label>
+                    <input type="text" name="titulo" placeholder="Ex: O impacto da IA na medicina" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <input type="text" name="categoria" placeholder="Ex: Tecnologia, Robótica, Saúde" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Link da Imagem de Capa</label>
+                    <input type="url" name="imagem_url" placeholder="https://exemplo.com/foto.jpg" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Conteúdo da Notícia</label>
+                    <textarea name="conteudo" placeholder="Escreva o artigo aqui... (Aceita HTML para negritos e links)" rows="10" required></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">Publicar no Portal</button>
             </form>
         </div>
 
-        <div id="aba-produto" class="tab-content">
-            <h2 class="section-title" style="color: var(--neon-purple);">Cadastrar no Marketplace</h2>
+        <div id="produto" class="tab-content">
             <form action="/admin/cadastrar_produto" method="post">
-                <input type="text" name="nome" placeholder="Nome do Produto (ex: Robô Sniper IA)" required>
-                
-                <label>Tipo de Categoria:</label>
-                <select name="tipo">
-                    <option value="web_bot">🤖 Auxiliador / Web Bot</option>
-                    <option value="trade_bot">📊 Trade / Sinais</option>
-                    <option value="ebook">📚 E-book Premium</option>
-                    <option value="infoproduto">🛒 Infoproduto / Parceiro</option>
-                </select>
+                <div class="form-group">
+                    <label>Nome do Produto/Robô</label>
+                    <input type="text" name="nome" placeholder="Ex: Nexus Mines Bot" required>
+                </div>
 
-                <input type="text" name="preco" placeholder="Preço (ex: R$ 97,00 ou Grátis)" required>
-                <input type="text" name="imagem_url" placeholder="URL da Imagem do Card" required>
-                <input type="text" name="link_venda" placeholder="Link de Venda ou Acesso">
-                <textarea name="descricao" placeholder="Pequena descrição para o card..." rows="3" required></textarea>
-                
-                <button type="submit" class="btn-postar" style="background: var(--neon-purple);">CADASTRAR PRODUTO</button>
+                <div class="form-group">
+                    <label>Categoria Visual</label>
+                    <input type="text" name="categoria_txt" placeholder="Ex: Auxiliador, Trade, Itens" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo de Sistema (Filtro)</label>
+                    <select name="tipo">
+                        <option value="web_bot">🤖 Auxiliador / Web Bot</option>
+                        <option value="trade_bot">📊 Trade / Sinais</option>
+                        <option value="ebook">📚 E-book Premium</option>
+                        <option value="infoproduto">🛒 Infoproduto / Parceiro</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Preço (Opcional)</label>
+                    <input type="text" name="preco" placeholder="Ex: R$ 49,90 / mês">
+                </div>
+
+                <div class="form-group">
+                    <label>Link da Imagem (Card)</label>
+                    <input type="url" name="imagem_url" placeholder="https://exemplo.com/card.jpg" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Link de Destino (Checkout/Link Afiliado)</label>
+                    <input type="url" name="link_venda" placeholder="https://hotmart.com/seu-link" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Descrição Curta</label>
+                    <textarea name="descricao" placeholder="Explique brevemente o que o produto faz..." rows="3" required></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit purple-btn">Inserir no Marketplace</button>
             </form>
         </div>
     </div>
 
     <script>
-        function openTab(evt, tabName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-                tabcontent[i].classList.remove("active");
-            }
-            tablinks = document.getElementsByClassName("tab-btn");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].classList.remove("active");
-            }
-            document.getElementById(tabName).style.display = "block";
-            document.getElementById(tabName).classList.add("active");
+        function openTab(evt, tabId) {
+            const contents = document.querySelectorAll(".tab-content");
+            const buttons = document.querySelectorAll(".tab-btn");
+
+            contents.forEach(content => content.classList.remove("active"));
+            buttons.forEach(btn => btn.classList.remove("active"));
+
+            document.getElementById(tabId).classList.add("active");
             evt.currentTarget.classList.add("active");
         }
     </script>
-
 </body>
 </html>
