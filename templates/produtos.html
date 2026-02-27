@@ -6,7 +6,7 @@
     <title>Marketplace IA | Loja Oficial</title>
     <link rel="stylesheet" href="/static/style.css">
     <style>
-        /* --- ESTILO DO CARROSSEL (CORRIGIDO PARA MOBILE) --- */
+        /* --- ESTILO DO CARROSSEL --- */
         .product-shelf {
             display: flex;
             flex-wrap: nowrap; 
@@ -17,16 +17,9 @@
             scroll-snap-type: x mandatory; 
         }
         
-        .product-shelf::-webkit-scrollbar {
-            height: 6px; 
-        }
-        .product-shelf::-webkit-scrollbar-track {
-            background: #0d1117;
-        }
-        .product-shelf::-webkit-scrollbar-thumb {
-            background: var(--neon-blue);
-            border-radius: 10px;
-        }
+        .product-shelf::-webkit-scrollbar { height: 6px; }
+        .product-shelf::-webkit-scrollbar-track { background: #0d1117; }
+        .product-shelf::-webkit-scrollbar-thumb { background: var(--neon-blue); border-radius: 10px; }
 
         .product-item-box {
             flex: 0 0 auto; 
@@ -37,39 +30,97 @@
             overflow: hidden;
             border: 1px solid #30363d;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            position: relative;
             display: flex;
             flex-direction: column;
+            transition: transform 0.2s;
         }
+        .product-item-box:hover { transform: translateY(-5px); border-color: var(--neon-blue); }
 
         .product-img-container {
-            width: 100%;
-            height: 150px;
+            width: 100%; height: 150px;
             background-color: #0d1117;
             border-bottom: 1px solid #30363d;
         }
-        
         .product-img-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: 100%; height: 100%; object-fit: cover;
         }
         
         .product-description {
-            font-size: 0.75rem;
-            color: #8b949e;
-            margin: 5px 0 10px 0;
-            display: block;
-            line-height: 1.2;
+            font-size: 0.75rem; color: #8b949e;
+            margin: 5px 0 10px 0; display: block; line-height: 1.2;
         }
 
-        /* Botões Específicos */
+        /* --- BOTOES --- */
+        .btn-action {
+            width: 100%; padding: 12px; border: none; border-radius: 5px;
+            font-weight: bold; cursor: pointer; text-transform: uppercase;
+            font-size: 0.85rem; margin-top: 10px; transition: 0.3s;
+        }
         .btn-ebook { background: white; color: black; }
         .btn-trade { background: #ff9100; color: white; }
         .btn-partner { background: #00ff41; color: black; }
-        .btn-access { background: var(--neon-blue); color: white; }
+        .btn-access { background: var(--neon-blue); color: black; }
+        .btn-action:hover { opacity: 0.8; }
 
-        .category-title { margin-left: 5px; margin-bottom: 10px; }
+        .category-title { margin-left: 5px; margin-bottom: 10px; font-size: 1.2rem; }
+
+        /* ==========================================================
+           ESTILO DO NOVO MODAL (MINI MENU)
+           ========================================================== */
+        .modal-overlay {
+            display: none; /* Escondido por padrão */
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(13, 17, 23, 0.85); /* Fundo escuro transparente */
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            align-items: center; justify-content: center;
+        }
+        
+        .modal-content {
+            background: #161b22;
+            border: 1px solid var(--neon-purple);
+            border-radius: 15px;
+            width: 90%; max-width: 400px;
+            padding: 25px; text-align: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(188, 140, 255, 0.2);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fechar-modal {
+            position: absolute; top: 10px; right: 15px;
+            color: #8b949e; font-size: 1.5rem; font-weight: bold;
+            cursor: pointer; background: none; border: none;
+        }
+        .fechar-modal:hover { color: white; }
+
+        .modal-img {
+            width: 100%; height: 180px; object-fit: cover;
+            border-radius: 10px; margin-bottom: 15px; border: 1px solid #30363d;
+        }
+
+        .modal-title { color: white; font-size: 1.4rem; margin: 0 0 10px 0; }
+        .modal-desc { color: #8b949e; font-size: 0.9rem; margin-bottom: 15px; }
+        .modal-price { color: var(--neon-blue); font-size: 1.3rem; font-weight: bold; margin-bottom: 20px; }
+
+        .modal-buttons {
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .btn-comprar {
+            background: var(--neon-purple); color: white;
+            text-decoration: none; padding: 15px; border-radius: 8px;
+            font-weight: bold; font-size: 1rem; display: block;
+        }
+        .btn-copiar {
+            background: transparent; border: 1px solid #30363d; color: #8b949e;
+            padding: 10px; border-radius: 8px; cursor: pointer; transition: 0.3s;
+        }
+        .btn-copiar:hover { background: #30363d; color: white; }
     </style>
 </head>
 <body>
@@ -82,13 +133,13 @@
 
     <header class="main-header" style="padding: 20px 20px;">
         <h1 style="font-size: 2rem;">MARKETPLACE<span>.IA</span></h1>
-        <p style="color: #8b949e; font-size: 0.9rem;">As melhores ferramentas para 2026</p>
+        <p style="color: #8b949e; font-size: 0.9rem;">Toque em um item para abrir o painel de acesso.</p>
     </header>
 
     <main class="container">
         
         <section class="category-section">
-            <h3 class="category-title" style="color: var(--neon-blue);">🤖 AUXILIADORES (ARQUIVOS .ZIP)</h3>
+            <h3 class="category-title" style="color: var(--neon-blue);">🤖 AUXILIADORES (.ZIP)</h3>
             <div class="product-shelf">
                 {% for p in produtos if p.tipo == 'web_bot' %}
                 <div class="product-item-box">
@@ -99,7 +150,10 @@
                         <strong>{{ p.nome }}</strong>
                         <span class="product-description">{{ p.descricao }}</span>
                         <span class="price-tag" style="color: var(--neon-blue);">{{ p.preco }}</span>
-                        <a href="{{ p.link_venda }}" target="_blank" class="btn-action btn-access" style="margin-top: 10px; display: block; text-align: center;">ADQUIRIR ACESSO</a>
+                        <button class="btn-action btn-access" 
+                                onclick="abrirMenu('{{ p.nome }}', '{{ p.descricao }}', '{{ p.preco }}', '{{ p.imagem_url }}', '{{ p.link_venda }}')">
+                            VER ACESSO
+                        </button>
                     </div>
                 </div>
                 {% endfor %}
@@ -107,7 +161,7 @@
         </section>
 
         <section class="category-section">
-            <h3 class="category-title" style="color: #ff9100;">📊 TRADES & SINAIS (ARQUIVOS .EXE)</h3>
+            <h3 class="category-title" style="color: #ff9100;">📊 TRADES & SINAIS (.EXE)</h3>
             <div class="product-shelf">
                 {% for p in produtos if p.tipo == 'trade_bot' %}
                 <div class="product-item-box">
@@ -118,7 +172,10 @@
                         <strong>{{ p.nome }}</strong>
                         <span class="product-description">{{ p.descricao }}</span>
                         <span class="price-tag" style="color: #ff9100;">{{ p.preco }}</span>
-                        <a href="{{ p.link_venda }}" target="_blank" class="btn-action btn-trade" style="margin-top: 10px; display: block; text-align: center;">ADQUIRIR ACESSO</a>
+                        <button class="btn-action btn-trade" 
+                                onclick="abrirMenu('{{ p.nome }}', '{{ p.descricao }}', '{{ p.preco }}', '{{ p.imagem_url }}', '{{ p.link_venda }}')">
+                            VER ACESSO
+                        </button>
                     </div>
                 </div>
                 {% endfor %}
@@ -137,7 +194,10 @@
                         <strong>{{ p.nome }}</strong>
                         <span class="product-description">{{ p.descricao }}</span>
                         <span class="price-tag" style="color: white;">{{ p.preco }}</span>
-                        <a href="{{ p.link_venda }}" target="_blank" class="btn-action btn-ebook" style="margin-top: 10px; display: block; text-align: center;">ADQUIRIR ACESSO</a>
+                        <button class="btn-action btn-ebook" 
+                                onclick="abrirMenu('{{ p.nome }}', '{{ p.descricao }}', '{{ p.preco }}', '{{ p.imagem_url }}', '{{ p.link_venda }}')">
+                            VER ACESSO
+                        </button>
                     </div>
                 </div>
                 {% endfor %}
@@ -155,27 +215,13 @@
                     <div class="info" style="padding: 15px;">
                         <strong>{{ p.nome }}</strong>
                         <span class="product-description">{{ p.descricao }}</span>
-                        <a href="{{ p.link_venda }}" target="_blank" class="btn-action btn-partner" style="margin-top: 10px; display: block; text-align: center;">VER OFERTA</a>
+                        <button class="btn-action btn-partner" 
+                                onclick="abrirMenu('{{ p.nome }}', '{{ p.descricao }}', '', '{{ p.imagem_url }}', '{{ p.link_venda }}')">
+                            VER OFERTA
+                        </button>
                     </div>
                 </div>
                 {% endfor %}
-            </div>
-        </section>
-
-        <section class="category-section">
-            <h3 class="category-title" style="color: #8b949e;">🔗 OUTROS PROJETOS</h3>
-            <div class="product-shelf">
-                <div class="product-item-box" style="opacity: 0.6;">
-                    <div class="product-img-container" style="background: #222; display: flex; align-items: center; justify-content: center;">
-                        <span style="font-size: 3rem;">🔒</span>
-                    </div>
-                    <div class="info" style="padding: 15px;">
-                        <strong>Robô de Informação</strong>
-                        <span class="product-description">Sistema de análise de dados em tempo real para 2026.</span>
-                        <span style="font-size: 0.65rem; color: #ff9100; display: block;">EM DESENVOLVIMENTO</span>
-                        <button class="btn-action" style="background: #333; color: #777; margin-top: 10px; width: 100%; border: none; padding: 10px; border-radius: 5px; cursor: not-allowed;" disabled>AGUARDE</button>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -184,5 +230,71 @@
     <footer class="main-footer" style="text-align: center; padding: 40px; border-top: 1px solid #30363d; margin-top: 40px;">
         <p>&copy; 2026 Marketplace IA</p>
     </footer>
+
+    <div id="painelMenu" class="modal-overlay">
+        <div class="modal-content">
+            <button class="fechar-modal" onclick="fecharMenu()">&times;</button>
+            
+            <img id="menuImg" src="" alt="Imagem do Produto" class="modal-img">
+            <h2 id="menuTitulo" class="modal-title">Nome</h2>
+            <p id="menuDesc" class="modal-desc">Descrição</p>
+            <div id="menuPreco" class="modal-price">R$ 0,00</div>
+            
+            <div class="modal-buttons">
+                <a id="menuLinkCompra" href="#" target="_blank" class="btn-comprar">🛒 IR PARA O CHECKOUT</a>
+                
+                <button class="btn-copiar" onclick="copiarLinkProduto()">🔗 Copiar Link de Venda</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Função para Abrir o Menu e preencher com os dados do produto clicado
+        function abrirMenu(nome, desc, preco, imgUrl, linkVenda) {
+            // Preenche os textos e imagens
+            document.getElementById('menuTitulo').innerText = nome;
+            document.getElementById('menuDesc').innerText = desc;
+            document.getElementById('menuPreco').innerText = preco;
+            
+            // Tratamento caso a imagem falhe
+            let imgElement = document.getElementById('menuImg');
+            imgElement.src = imgUrl;
+            imgElement.onerror = function() {
+                this.src = 'https://placehold.co/600x400/161b22/bc8cff?text=Produto';
+            };
+
+            // Configura o link de destino no botão verde
+            document.getElementById('menuLinkCompra').href = linkVenda;
+            
+            // Guarda o link temporariamente no botão de copiar
+            document.querySelector('.btn-copiar').setAttribute('data-link', linkVenda);
+
+            // Mostra o painel escurecendo o fundo
+            document.getElementById('painelMenu').style.display = 'flex';
+        }
+
+        // 2. Função para Fechar o Menu
+        function fecharMenu() {
+            document.getElementById('painelMenu').style.display = 'none';
+        }
+
+        // 3. Função extra: Copiar o link para mandar para um cliente no WhatsApp
+        function copiarLinkProduto() {
+            let link = document.querySelector('.btn-copiar').getAttribute('data-link');
+            navigator.clipboard.writeText(link).then(() => {
+                let btn = document.querySelector('.btn-copiar');
+                btn.innerText = "✅ Link Copiado!";
+                setTimeout(() => { btn.innerText = "🔗 Copiar Link de Venda"; }, 2000);
+            });
+        }
+
+        // 4. Fechar se o usuário clicar fora da caixa do painel
+        window.onclick = function(event) {
+            let modal = document.getElementById('painelMenu');
+            if (event.target == modal) {
+                fecharMenu();
+            }
+        }
+    </script>
 </body>
 </html>
