@@ -1,24 +1,37 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import Base
-import os
-# Isso garante que ele ache o banco na pasta atual do servidor
+
+# 1. Localiza a pasta atual do projeto para salvar o banco local
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-db_path = os.path.join(BASE_DIR, "portal.db")
-SQLALCHEMY_DATABASE_URL = f"sqlite:///{db_path}"
+DB_PATH = os.path.join(BASE_DIR, "portal.db")
 
-# O arquivo do banco será criado automaticamente na pasta do projeto
-SQLALCHEMY_DATABASE_URL = "sqlite:///./portal.db"
+# 2. Configuração da URL do Banco de Dados
+# Se você colocar uma URL do PostgreSQL no Render, ele usará ela. 
+# Caso contrário, usará o SQLite local (portal.db).
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{DB_PATH}")
 
-# O engine é o motor que gerencia a conexão
+# Pequeno ajuste para compatibilidade com versões novas do PostgreSQL no Render
+if SQLALCHEMY_DATABASE_URL.startswith("postgres://"):
+    SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+# 3. Criação do Engine (Motor)
+# O "check_same_thread" é um ajuste obrigatório apenas para o SQLite
+connect_args = {"check_same_thread": False} if SQLALCHEMY_DATABASE_URL.startswith("sqlite") else {}
+
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, 
-    connect_args={"check_same_thread": False} # Necessário apenas para SQLite
+    connect_args=connect_args
 )
 
-# Cria a fábrica de sessões para conversar com o banco
+# 4. Fábrica de sessões (onde as transações acontecem)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Função para criar as tabelas
+# 5. Função para criar as tabelas no banco de dados
 def criar_banco():
+    """
+    Lê o arquivo models.py e cria as tabelas se elas não existirem.
+    """
     Base.metadata.create_all(bind=engine)
+    print("✅ Estrutura do banco de dados verificada/criada com sucesso.")
